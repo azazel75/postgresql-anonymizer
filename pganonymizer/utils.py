@@ -90,7 +90,7 @@ def build_and_then_import_data(connection, table, primary_key, columns,
     for i in trange(batches, desc="Processing {} batches for {}".format(batches, table), disable=not verbose):
         records = cursor.fetchmany(size=chunk_size)
         if records:
-            data = parmap.map(process_row, records, columns, excludes, pm_pbar=verbose)
+            data = parmap.map(process_row, records, columns, excludes, pm_pbar=verbose, pm_parallel=False)
             import_data(connection, temp_table, [primary_key] + column_names, filter(None, data))
     apply_anonymized_data(connection, temp_table, table, primary_key, columns)
 
